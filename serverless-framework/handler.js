@@ -7,8 +7,13 @@ function cbw(cb) {
     if (err) {
       cb(err);
     } else {
+      res.statusCode = 200;
+      if (res.headers == undefined) {
+        res.headers = {'Content-Type': 'application/json', 'X-Test': 'OK'};
+      }
+
       if (typeof res === 'object' && res.hasOwnProperty('body')) {
-        cb(null, res.body);
+        cb(null, res);
       } else {
         cb(null, {});
       }
@@ -18,8 +23,8 @@ function cbw(cb) {
 
 module.exports.getUsers = (event, context, cb) => todo.getUsers({
   parameters: {
-    limit: event.query.limit,
-    next: event.query.next
+    limit: event.queryStringParameters.limit,
+    next: event.queryStringParameters.next
   }
 }, cbw(cb));
 

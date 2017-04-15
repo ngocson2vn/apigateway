@@ -47,7 +47,7 @@ exports.getUsers = function(event, cb) {
       cb(err);
     } else {
       var res = {
-        "body": data.Items.map(mapUserItem)
+        "body": JSON.stringify(data.Items.map(mapUserItem))
       };
       if (data.LastEvaluatedKey !== undefined) {
         res.headers = {"next": data.LastEvaluatedKey.uid.S};
@@ -59,6 +59,8 @@ exports.getUsers = function(event, cb) {
 
 exports.postUser = function(event, cb) {
   console.log("postUser", JSON.stringify(event));
+  body = JSON.parse(event.body);
+
   var uid = uuid.v4();
   var params = {
     "Item": {
@@ -66,10 +68,10 @@ exports.postUser = function(event, cb) {
         "S": uid
       },
       "email": {
-        "S": event.body.email
+        "S": body.email
       },
       "phone": {
-        "S": event.body.phone
+        "S": body.phone
       }
     },
     "TableName": "todo-user",
@@ -79,7 +81,7 @@ exports.postUser = function(event, cb) {
     if (err) {
       cb(err);
     } else {
-      cb(null, {"headers": {"uid": uid}, "body": mapUserItem(params.Item)});
+      cb(null, {"headers": {"uid": uid}, "body": JSON.stringify(mapUserItem(params.Item))});
     }
   });
 };
