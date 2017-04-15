@@ -163,7 +163,7 @@ exports.postTask = function(event, cb) {
     if (err) {
       cb(err);
     } else {
-      cb(null, {"headers": {"uid": event.parameters.userId, "tid": tid}, "body": mapTaskItem(params.Item)});
+      cb(null, {"headers": {"uid": event.parameters.userId, "tid": tid}, "body": JSON.stringify(mapTaskItem(params.Item))});
     }
   });
 };
